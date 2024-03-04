@@ -1,23 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import Products from './Components/Products';
+import StandardErrorBoundary from './Components/StandardErrorBoundary/StandardErrorBoundary';
+import Navbar from './Components/Navbar';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import AddProduct from './Components/AddProduct';
+import ErrorPage from './Components/ErrorPage/ErrorPage';
+import { useState } from 'react';
 
 function App() {
+  const [showNav, setShowNav] = useState(true);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <StandardErrorBoundary>
+        <BrowserRouter>
+          {showNav && <Navbar /> }
+          <div className="container">
+            <Routes>
+              {
+                ['products', '/','home'].map((path, index) => <Route path={path} key={index} element={<Products />} />)
+              }
+              
+              <Route exact path="/add-product" element={<AddProduct />}/>
+
+              <Route path="*" element={<ErrorPage funcNav={setShowNav}/>} />
+
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </StandardErrorBoundary>
     </div>
   );
 }
